@@ -22,7 +22,7 @@ export interface UseFormProps<T> {
 
 export interface UseFormReturnType {
   isConfirmation?: boolean;
-
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onChangeForm?:
     | ((name: string, value?: any, isValid?: boolean) => Promise<void>)
     | undefined;

@@ -4,7 +4,10 @@ export interface FormElementType {
   getValue: () => Promise<any> | any;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   setValue: (value: any) => void;
-  isValid?: (value?: any, changeAppearance?: boolean) => Promise<boolean> | boolean | undefined;
+  isValid?: (
+    value?: any,
+    changeAppearance?: boolean
+  ) => Promise<boolean> | boolean | undefined;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onChange?: (value: any) => void;
   reset?: () => void;

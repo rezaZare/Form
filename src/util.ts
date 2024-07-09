@@ -28,7 +28,11 @@ export function getValueFromObject(fieldName: string, data: any): any {
   let currentLevel = data;
 
   for (const key of fieldNames) {
-    if (currentLevel && typeof currentLevel === "object" && key in currentLevel) {
+    if (
+      currentLevel &&
+      typeof currentLevel === "object" &&
+      key in currentLevel
+    ) {
       currentLevel = currentLevel[key];
     } else {
       // Return a default value or handle the case where the field doesn't exist
@@ -49,7 +53,10 @@ interface FormElements {
   key: string;
 }
 
-export async function getFormValue<T>(value: unknown, state: Map<string, FormElementType>): Promise<FormValue<T>> {
+export async function getFormValue<T>(
+  value: unknown,
+  state: Map<string, FormElementType>
+): Promise<FormValue<T>> {
   const obj = value;
   let haveError = false;
   const invalidNames: string[] = [];
@@ -98,7 +105,10 @@ export async function getFormValue<T>(value: unknown, state: Map<string, FormEle
     data: obj as T,
   };
 }
-export async function getOnlyFormValue<T>(value: unknown, state: Map<string, FormElementType>): Promise<FormValue<T>> {
+export async function getOnlyFormValue<T>(
+  value: unknown,
+  state: Map<string, FormElementType>
+): Promise<FormValue<T>> {
   const obj = value;
   const formElements: FormElements[] = [];
 

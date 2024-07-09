@@ -1,15 +1,13 @@
 import {
-  createContext,
   type ForwardedRef,
-  forwardRef,
   type ReactNode,
+  createContext,
+  forwardRef,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
-  PropsWithChildren,
-  SetStateAction,
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -28,10 +26,11 @@ export interface FormBaseProp {
    * this field is used for components that do not need to be subscribed
    */
   doNotSubscribe?: boolean;
+  name?: string;
   doNotResetAfterSubmit?: boolean;
 }
 
-export interface FormProps<T> extends PropsWithChildren {
+export interface FormProps<T> extends React.PropsWithChildren {
   value: T;
   id?: keyof T;
   actions?: ReactNode;
@@ -50,10 +49,11 @@ export type FormRefType<T> = {
   submit: () => void;
   getValues: () => Promise<T | undefined>;
   setValues: (data: T) => void;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   setFieldValues?: (name: string, value: any) => void;
   reset: () => void;
   isValid: () => Promise<boolean>;
-  setLoading: (data: SetStateAction<boolean>) => void;
+  setLoading: (data: React.SetStateAction<boolean>) => void;
   state: Map<string, FormElementType>;
 };
 
@@ -61,6 +61,7 @@ interface FormContextType {
   subscribe: (element: FormElementType) => void;
   unsubscribe: (elementName?: string) => void;
   getId?: () => number | string | undefined;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onChange?: (name: string, isValid: boolean, value?: any) => Promise<void>;
   submit?: () => void;
   reset?: () => void;
@@ -71,7 +72,7 @@ interface FormContextType {
 }
 
 export const FormContext = createContext<FormContextType | null>(null);
-
+// Define a custom interface that extends Window
 interface CustomWindow<T> extends Window {
   formRef?: FormRefType<T>;
 }
@@ -86,6 +87,7 @@ function FormComponent<T>(
     onInvalidData,
     onSubmit,
     onChange,
+    isConfirmation = false,
     disableEnterKeySubmit = false,
   }: FormProps<T>,
   ref?: ForwardedRef<FormRefType<T>>
@@ -94,12 +96,14 @@ function FormComponent<T>(
     new Map<string, FormElementType>()
   );
   const validListRef = useRef<Map<string, boolean>>(new Map<string, boolean>());
+  const [disabledSubmitButton, setDisabledSubmitButton] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [disabledSubmitButton, setDisabledSubmitButton] = useState(true);
   const [loaded, setLoaded] = useState<boolean>(false);
   const formId = uuidv4();
   const divRef = useRef<HTMLDivElement | null>(null);
+
   const log = useLogger("Form");
   const customWindow = window as CustomWindow<T>;
 
@@ -129,7 +133,6 @@ function FormComponent<T>(
     reset: handleReset,
     isValid,
     setLoading,
-
     state,
   };
   useImperativeHandle(ref, () => refMethod);
@@ -257,7 +260,6 @@ function FormComponent<T>(
     updateValidateList(name, newValue, isValid);
     enableSubmitButtonIfSatisfy();
   }
-
   function updateValidateList(name: string, newValue: any, isValid: boolean) {
     if (name && validListRef.current.has(name)) {
       validListRef.current?.set(name, isValid);
@@ -398,12 +400,13 @@ function FormComponent<T>(
         loading,
         disabled,
         onChange: handleFieldChange,
+        isConfirmation: isConfirmation,
         disabledSubmitButton: disabledSubmitButton,
       }}
     >
       <div
         role="form"
-        className="h-full max-h-fit w-full "
+        className="w-full"
         id={formId}
         ref={divRef}
         // onSubmit={handleSubmit}
@@ -419,5 +422,5 @@ function FormComponent<T>(
 //   resetAfterSubmit: true,
 // };
 export const Form = forwardRef(FormComponent) as <T>(
-  props: FormProps<T> & { ref?: ForwardedRef<FormRefType<T>> }
+  props: FormProps<T> & { ref?: React.ForwardedRef<FormRefType<T>> }
 ) => ReturnType<typeof FormComponent>;
