@@ -1,6 +1,7 @@
 {
   "name": "form",
-  "version": "0.0.1",
+  "version": "1.0.2",
+  "author": "Reza Zare",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -58,7 +59,8 @@
     "vite": "^4.5.3",
     "vite-plugin-static-copy": "^0.14.0"
   },
-  "publishConfig": {
-    "@espad-component:registry": "https://gitlab.espadev.ir/api/v4/projects/30/packages/npm/"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rezaZare/Form.git"
   }
 }

@@ -4,6 +4,12 @@ This package is made to manage React forms.
 
 All form components must use Form Hook and implement the functions required by this hook, passing them as inputs to the hook.
 
+## Install Package
+
+```
+npm i form-ja
+```
+
 ## Usage
 
 ```typescript
