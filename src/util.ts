@@ -7,8 +7,12 @@ export interface KeyValue {
 }
 export function getObjectDetail(field: KeyValue) {
   const final: KeyValue[] = [];
-  if (!Array.isArray(field.value) && typeof field.value === "object") {
-    for (const [key, value] of Object.entries(field.value)) {
+  if (
+    !Array.isArray(field.value) &&
+    typeof field.value === "object" &&
+    field?.value
+  ) {
+    for (const [key, value] of Object.entries(field?.value)) {
       if (typeof value === "object") {
         final.push(...getObjectDetail({ name: `${field.name}.${key}`, value }));
       } else {
